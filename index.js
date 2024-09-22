@@ -12,20 +12,28 @@ app.use(cors());
 
 // สร้าง connection เพียงครั้งเดียว
 let db = null;
-async function initializeDBConnection() {
-    try {
-        db = await mysql.createConnection({
-            host: process.env.DB_HOST,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            database: process.env.DB_NAME,
-            port: process.env.PORT,
-        });
-        console.log("Connected To MySQL");
-    } catch (err) {
-        console.error("Error connecting to MySQL:", err.message);
+async function initializeDBConnection(retries = 5) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            db = await mysql.createConnection({
+                host: process.env.DB_HOST,
+                user: process.env.DB_USER,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_NAME
+            });
+            console.log("Connected To MySQL");
+            return;
+        } catch (err) {
+            console.error("Error connecting to MySQL:", err.message);
+            if (i < retries - 1) {
+                console.log("Retrying connection...");
+                await new Promise(resolve => setTimeout(resolve, 5000)); // รอ 5 วินาทีก่อนลองใหม่
+            }
+        }
     }
+    console.error("Could not connect to MySQL after retries");
 }
+
 
 // เรียกใช้งานฟังก์ชันเพื่อเชื่อมต่อกับฐานข้อมูล
 initializeDBConnection();
