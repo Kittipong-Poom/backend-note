@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 5000
 
 # Run the server (ensure process.env.PORT is used in your app)
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

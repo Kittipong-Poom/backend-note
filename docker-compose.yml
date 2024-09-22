@@ -10,7 +10,7 @@ services:
       - db
     volumes:
       - .:/app
-    command: "npm start"
+    command: "npm run dev"
     restart: always  # เพิ่มเพื่อให้คอนเทนเนอร์รีสตาร์ทถ้าหยุดทำงาน
 
   db:
