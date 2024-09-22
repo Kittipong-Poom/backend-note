@@ -6,22 +6,16 @@ const router = Router();
 router.post("/login", async (req, res) => {
   const { user, password } = req.body;
 
-  try {
-    const [results] = await db.query("SELECT * FROM users WHERE user = ?", [user]);
-    if (results.length === 0) {
-      return res.status(400).json({ message: "ไม่พบผู้ใช้" });
-    }
+  // Mockup user และ password
+  const mockUser = "Johndoe"; // กำหนด user ที่ต้องการ
+  const mockPassword = "john1234"; // กำหนด password ที่ต้องการ
 
-    const userRecord = results[0];
-    if (password === userRecord.password) {
-      const token = "some_generated_token"; // สร้างโทเค็นจริงหรือใช้ JWT
-      res.json({ message: "เข้าสู่ระบบสำเร็จ", token, userId: userRecord.id });
-    } else {
-      return res.status(400).json({ message: "ชื่อผู้ใช้ไม่ถูกต้อง" });
-    }
-  } catch (err) {
-    console.error("เกิดข้อผิดพลาดในการเข้าสู่ระบบ:", err.message);
-    res.status(500).json({ message: "ข้อผิดพลาดภายในเซิร์ฟเวอร์" });
+  // เช็คว่า user และ password ตรงกับ mock หรือไม่
+  if (user === mockUser && password === mockPassword) {
+    res.json({ message: "เข้าสู่ระบบสำเร็จ", userId: 1 }); // mock userId เป็น 1
+    console.log("เข้าสู่ระบบสำเร็จ");
+  } else {
+    res.status(400).json({ message: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" });
   }
 });
 
