@@ -7,19 +7,15 @@ router.post("/login", async (req, res) => {
   const { user, password } = req.body;
 
   try {
-    const [results] = await db.query("SELECT * FROM users WHERE user = ?", [
-      user,
-    ]);
+    const [results] = await db.query("SELECT * FROM users WHERE user = ?", [user]);
     if (results.length === 0) {
       return res.status(400).json({ message: "ไม่พบผู้ใช้" });
     }
-    const userRecord = results[0];
 
+    const userRecord = results[0];
     if (password === userRecord.password) {
-      // สร้างโทเค็นที่นี่
-      const token = "some_generated_token"; // แทนที่ด้วยโทเค็นที่คุณสร้าง
+      const token = "some_generated_token"; // สร้างโทเค็นจริงหรือใช้ JWT
       res.json({ message: "เข้าสู่ระบบสำเร็จ", token, userId: userRecord.id });
-      console.log("เข้าสู่ระบบสำเร็จ");
     } else {
       return res.status(400).json({ message: "ชื่อผู้ใช้ไม่ถูกต้อง" });
     }
