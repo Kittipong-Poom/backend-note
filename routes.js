@@ -3,13 +3,11 @@ import { db } from "./index.js"; // นำ connection ที่สร้าง�
 
 const router = Router();
 
-router.post("/login", async (req, res) => {
-  const { user, password } = req.body;
+router.get("/login", async (req, res) => {
+  const { user, password } = req.query; // รับค่าจาก query parameters
 
   try {
-    const [results] = await db.query("SELECT * FROM users WHERE user = ?", [
-      user,
-    ]);
+    const [results] = await db.query("SELECT * FROM users WHERE user = ?", [user]);
     if (results.length === 0) {
       return res.status(400).json({ message: "ไม่พบผู้ใช้" });
     }
@@ -19,7 +17,7 @@ router.post("/login", async (req, res) => {
       res.json({ message: "เข้าสู่ระบบสำเร็จ", userId: userRecord.id });
       console.log("เข้าสู่ระบบสำเร็จ");
     } else {
-      return res.status(400).json({ message: "ชื่อผู้ใช้ไม่ถูกต้อง" });
+      return res.status(400).json({ message: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" });
     }
   } catch (err) {
     console.error("เกิดข้อผิดพลาดในการเข้าสู่ระบบ:", err.message);
