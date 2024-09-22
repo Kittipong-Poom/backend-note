@@ -1,22 +1,20 @@
-# ใช้ Node.js เวอร์ชันเบา (alpine)
+# Use lightweight Node.js version
 FROM node:18-alpine
 
-RUN apk add --no-cache make gcc g++ python3
-# ตั้งค่าตำแหน่งทำงานใน container
+# Set working directory inside the container
 WORKDIR /app
 
-# คัดลอกไฟล์ package.json และ package-lock.json
+# Copy package.json and package-lock.json to the container
 COPY package*.json ./
 
-# ติดตั้ง dependencies
+# Install dependencies
 RUN npm install
 
-# คัดลอกโค้ดทั้งหมดไปยัง container
+# Copy the rest of the code to the container
 COPY . .
 
-# เปิดพอร์ต 5000
+# Open port 5000 or use environment variable for Render's assigned port
 EXPOSE 5000
 
-# รันเซิร์ฟเวอร์
+# Run the server (ensure process.env.PORT is used in your app)
 CMD ["npm", "run", "dev"]
- 
