@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "./index.js"; // นำ connection ที่สร้างไว้แล้วมาใช้
-
+const crypto = require('crypto');
 const router = Router();
 
 router.post("/login", async (req, res) => {
@@ -12,7 +12,10 @@ router.post("/login", async (req, res) => {
 
   // เช็คว่า user และ password ตรงกับ mock หรือไม่
   if (user === mockUser && password === mockPassword) {
-    res.json({ message: "เข้าสู่ระบบสำเร็จ", userId: 1 }); // mock userId เป็น 1
+    // สร้าง mock token (ใช้ crypto สร้าง string แบบสุ่ม)
+    const token = crypto.randomBytes(16).toString('hex'); // สร้าง token แบบสุ่ม
+
+    res.json({ message: "เข้าสู่ระบบสำเร็จ", token, userId: 1 }); // ส่ง token กลับไป
     console.log("เข้าสู่ระบบสำเร็จ");
   } else {
     res.status(400).json({ message: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" });
