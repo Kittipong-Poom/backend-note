@@ -6,7 +6,7 @@ import mysql from 'mysql2/promise';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 app.use(express.json());
 app.use(cors());
 
@@ -19,7 +19,7 @@ async function initializeDBConnection() {
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
-            port: process.env.PORT,
+            port: process.env.DB_PORT,      
         });
         console.log("Connected To MySQL");
     } catch (err) {
