@@ -28,13 +28,14 @@ async function initializeDBConnection() {
 }
 
 // เรียกใช้งานฟังก์ชันเพื่อเชื่อมต่อกับฐานข้อมูล
-initializeDBConnection();
+
 
 // ส่ง router เข้ากับแอปพลิเคชัน
 app.use(router);
 
 // เริ่มเซิร์ฟเวอร์
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+    await initializeDBConnection();
     console.log(`Server is running on http://localhost:${PORT}`);
 });
 
