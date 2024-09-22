@@ -27,7 +27,6 @@ async function initializeDBConnection() {
     }
 }
 
-// เรียกใช้งานฟังก์ชันเพื่อเชื่อมต่อกับฐานข้อมูล
 
 
 // ส่ง router เข้ากับแอปพลิเคชัน
