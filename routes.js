@@ -1,24 +1,29 @@
 import { Router } from "express";
 import { db } from "./index.js"; // นำ connection ที่สร้างไว้แล้วมาใช้
-import { randomBytes } from 'crypto';
+
 const router = Router();
 
 router.post("/login", async (req, res) => {
   const { user, password } = req.body;
 
-  // Mockup user และ password
-  const mockUser = "Johndoe"; // กำหนด user ที่ต้องการ
-  const mockPassword = "john1234"; // กำหนด password ที่ต้องการ
+  try {
+    const [results] = await db.query("SELECT * FROM users WHERE user = ?", [
+      user,
+    ]);
+    if (results.length === 0) {
+      return res.status(400).json({ message: "ไม่พบผู้ใช้" });
+    }
+    const userRecord = results[0];
 
-  // เช็คว่า user และ password ตรงกับ mock หรือไม่
-  if (user === mockUser && password === mockPassword) {
-    // สร้าง mock token (ใช้ crypto สร้าง string แบบสุ่ม)
-    const token = randomBytes(16).toString('hex'); // สร้าง token แบบสุ่ม
-
-    res.json({ message: "เข้าสู่ระบบสำเร็จ", token, userId: 1 }); // ส่ง token กลับไป
-    console.log("เข้าสู่ระบบสำเร็จ");
-  } else {
-    res.status(400).json({ message: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" });
+    if (password === userRecord.password) {
+      res.json({ message: "เข้าสู่ระบบสำเร็จ", userId: userRecord.id });
+      console.log("เข้าสู่ระบบสำเร็จ");
+    } else {
+      return res.status(400).json({ message: "ชื่อผู้ใช้ไม่ถูกต้อง" });
+    }
+  } catch (err) {
+    console.error("เกิดข้อผิดพลาดในการเข้าสู่ระบบ:", err.message);
+    res.status(500).json({ message: "ข้อผิดพลาดภายในเซิร์ฟเวอร์" });
   }
 });
 
